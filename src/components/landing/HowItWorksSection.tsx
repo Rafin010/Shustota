@@ -62,11 +62,11 @@ export function HowItWorksSection() {
             {steps.map((step, i) => (
               <motion.div
                 key={i}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.2, duration: 0.6 }}
-                className="bg-white border border-slate-100 rounded-3xl p-8 text-center shadow-xl shadow-slate-200/50 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300 group"
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ delay: i * 0.1, duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
+                className="bg-white border border-slate-100 rounded-3xl p-8 text-center shadow-[0_4px_24px_rgba(0,0,0,0.04)] hover:scale-[1.02] hover:shadow-[0_12px_32px_rgba(0,0,0,0.08)] transition-all duration-300 group cursor-default"
               >
                 <div className="w-16 h-16 mx-auto rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center mb-6 relative group-hover:bg-primary group-hover:border-primary group-hover:text-white transition-colors duration-300">
                   <step.icon size={28} className="text-slate-600 group-hover:text-white transition-colors duration-300" />

@@ -3,7 +3,6 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { MouseMagneticEffect } from "@/components/landing/MouseMagneticEffect";
-import { FloatingAIAssistant } from "@/components/landing/FloatingAIAssistant";
 import { HeroSection } from "@/components/landing/HeroSection";
 import { TrustedBySection } from "@/components/landing/TrustedBySection";
 import { AIIntelligenceSuite } from "@/components/landing/AIIntelligenceSuite";
@@ -19,7 +18,6 @@ export default function LandingPage() {
   return (
     <>
       <MouseMagneticEffect />
-      <FloatingAIAssistant />
       
       <div className="min-h-screen bg-white flex flex-col overflow-x-hidden w-full pt-16 sm:pt-20 selection:bg-primary/20 selection:text-primary">
         <Navbar />

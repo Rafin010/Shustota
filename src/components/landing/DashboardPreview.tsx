@@ -35,11 +35,11 @@ export function DashboardPreview() {
           
           {/* Main Hologram Card */}
           <motion.div
-            initial={{ opacity: 0, rotateX: 20, y: 50, scale: 0.9 }}
-            whileInView={{ opacity: 1, rotateX: 0, y: 0, scale: 1 }}
+            initial={{ opacity: 0, rotateX: 15, scale: 0.95 }}
+            whileInView={{ opacity: 1, rotateX: 0, scale: 1 }}
             viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 1, type: "spring", bounce: 0.3 }}
-            className="w-full max-w-4xl aspect-[16/9] glass-card !bg-[#0f172a]/60 !border-white/10 rounded-3xl p-8 shadow-[0_0_50px_rgba(0,82,204,0.3)] relative overflow-hidden"
+            transition={{ duration: 0.8, type: "spring", bounce: 0.2 }}
+            className="w-full max-w-4xl aspect-[16/9] glass-card !bg-[#0f172a]/60 !border-white/10 rounded-3xl p-8 shadow-[0_12px_32px_rgba(0,82,204,0.15)] relative overflow-hidden"
           >
             {/* Hologram scan line inside card */}
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent animate-laser-scan opacity-50" />
@@ -63,9 +63,9 @@ export function DashboardPreview() {
               ].map((m, i) => (
                 <motion.div 
                   key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.5 + i * 0.1 }}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.3 + i * 0.08, duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
                   className="bg-white/5 border border-white/10 rounded-2xl p-4 hover:bg-white/10 transition-colors"
                 >
                   <m.icon size={24} className={`${m.color} mb-3`} />

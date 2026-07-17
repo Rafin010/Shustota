@@ -200,6 +200,17 @@
 /* ====== BASE STYLES ====== */
 
 @layer base {
+  :root {
+    /* Emil Design Engineering Easings */
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+    --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+    
+    /* Emil Shadows (Semi-transparent, layered) */
+    --shadow-premium: 0 4px 24px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+    --shadow-premium-hover: 0 12px 32px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+  }
+
   * {
     @apply border-border outline-ring/50;
   }
@@ -215,6 +226,48 @@
 /* ====== UTILITY CLASSES ====== */
 
 @layer utilities {
+  /* Emil Kowalski Button Physics */
+  .emil-button {
+    position: relative;
+    overflow: hidden;
+    transition: transform 160ms var(--ease-out), filter 200ms ease, opacity 200ms ease, background-color 200ms ease, box-shadow 200ms ease;
+  }
+  .emil-button::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(to right, transparent, currentColor, transparent);
+    opacity: 0.15;
+    transform: skewX(-25deg);
+    transition: none;
+    pointer-events: none;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .emil-button:hover {
+      transform: scale(1.02) translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 61, 155, 0.08);
+    }
+    .emil-button:hover::after {
+      left: 150%;
+      transition: left 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+  }
+  .emil-button:active {
+    transform: scale(0.97) !important;
+  }
+  
+  /* Blur Masking for smooth state changes */
+  .blur-transition {
+    transition: filter 200ms ease, opacity 200ms ease;
+  }
+  .blur-transition.transitioning {
+    filter: blur(4px);
+    opacity: 0.7;
+  }
+
   /* Glassmorphism */
   .glass-panel {
     background: rgba(255, 255, 255, 0.4);
@@ -842,4 +895,10 @@
 @keyframes skeleton-shimmer {
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
+}
+
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }

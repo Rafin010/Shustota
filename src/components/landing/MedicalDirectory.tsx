@@ -1,21 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, MapPin, Star, Building2, UserCircle2, ArrowRight } from "lucide-react";
+import { Search, MapPin, Star, Building2, UserCircle2, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import Link from "next/link";
 import Image from "next/image";
+import { mockDoctors } from "@/lib/mockData";
 
 export function MedicalDirectory() {
   const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState<"doctors" | "hospitals">("doctors");
+  const scrollRef = useRef<HTMLDivElement>(null);
 
-  const doctors = [
-    { name: "Dr. Anika Rahman", spec: "Cardiologist", exp: "15 Years Exp.", rating: "4.9", loc: "Dhaka", img: "https://ui-avatars.com/api/?name=Anika+Rahman&background=003d9b&color=fff" },
-    { name: "Dr. Hasan Mahmud", spec: "Neurologist", exp: "12 Years Exp.", rating: "4.8", loc: "Chittagong", img: "https://ui-avatars.com/api/?name=Hasan+Mahmud&background=00687b&color=fff" },
-    { name: "Dr. Sarah Kamal", spec: "Pediatrician", exp: "8 Years Exp.", rating: "4.9", loc: "Sylhet", img: "https://ui-avatars.com/api/?name=Sarah+Kamal&background=004e32&color=fff" },
-  ];
+  const scroll = (direction: "left" | "right") => {
+    if (scrollRef.current) {
+      const { current } = scrollRef;
+      const scrollAmount = direction === "left" ? -350 : 350;
+      current.scrollBy({ left: scrollAmount, behavior: "smooth" });
+    }
+  };
 
   const hospitals = [
     { name: "Square Hospitals Ltd.", type: "Multi-specialty", rating: "4.8", loc: "Panthapath, Dhaka", img: "https://ui-avatars.com/api/?name=Square+Hospital&background=e8edff&color=003d9b" },
@@ -24,7 +28,7 @@ export function MedicalDirectory() {
   ];
 
   return (
-    <section className="relative py-24 lg:py-32 bg-white overflow-hidden">
+    <section id="doctors" className="relative py-24 lg:py-32 bg-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
         
         <div className="text-center max-w-4xl mx-auto mb-16 lg:mb-20">
@@ -118,46 +122,66 @@ export function MedicalDirectory() {
         <div className="relative">
           <AnimatePresence mode="wait">
             {activeTab === "doctors" ? (
-              <motion.div 
+                <motion.div 
                 key="doctors"
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
                 transition={{ duration: 0.3 }}
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
+                className="relative group/slider"
               >
-                {doctors.map((doc, i) => (
-                  <motion.div 
-                    key={i}
-                    whileHover={{ y: -5 }}
-                    className="bg-white border border-slate-100 rounded-3xl p-6 shadow-lg shadow-slate-200/40 group hover:border-primary/20 transition-all"
-                  >
-                    <div className="flex items-start justify-between mb-6">
-                      <div className="w-16 h-16 rounded-2xl overflow-hidden shadow-md">
-                        <img src={doc.img} alt={doc.name} className="w-full h-full object-cover" />
-                      </div>
-                      <div className="flex items-center gap-1 bg-orange-50 text-orange-600 px-2 py-1 rounded-lg text-xs font-bold">
-                        <Star size={12} className="fill-orange-500" />
-                        {doc.rating}
-                      </div>
-                    </div>
-                    <h3 className="font-bold text-xl text-[#0a1628] mb-1">{doc.name}</h3>
-                    <p className="text-primary font-medium text-sm mb-4">{doc.spec}</p>
-                    
-                    <div className="space-y-2 mb-6">
-                      <div className="flex items-center gap-2 text-slate-500 text-sm">
-                        <UserCircle2 size={16} /> {doc.exp}
-                      </div>
-                      <div className="flex items-center gap-2 text-slate-500 text-sm">
-                        <MapPin size={16} /> {doc.loc}
-                      </div>
-                    </div>
+                {/* Scroll Buttons */}
+                <button 
+                  onClick={() => scroll("left")}
+                  className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 bg-white shadow-[0_4px_24px_rgba(0,0,0,0.08)] p-3 rounded-full border border-slate-100 text-slate-400 hover:text-primary hover:scale-110 transition-all opacity-0 group-hover/slider:opacity-100 hidden md:block"
+                >
+                  <ChevronLeft size={24} />
+                </button>
+                <button 
+                  onClick={() => scroll("right")}
+                  className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 bg-white shadow-[0_4px_24px_rgba(0,0,0,0.08)] p-3 rounded-full border border-slate-100 text-slate-400 hover:text-primary hover:scale-110 transition-all opacity-0 group-hover/slider:opacity-100 hidden md:block"
+                >
+                  <ChevronRight size={24} />
+                </button>
 
-                    <Link href="/doctors" className="w-full bg-slate-50 hover:bg-primary hover:text-white text-primary font-bold text-sm py-3 rounded-xl flex items-center justify-center transition-colors">
-                      {t("Book Appointment", "অ্যাপয়েন্টমেন্ট বুক করুন")}
-                    </Link>
-                  </motion.div>
-                ))}
+                {/* Slider Container */}
+                <div 
+                  ref={scrollRef}
+                  className="flex gap-6 overflow-x-auto snap-x snap-mandatory no-scrollbar pb-8 pt-4 px-4 -mx-4"
+                >
+                  {mockDoctors.map((doc) => (
+                    <motion.div 
+                      key={doc.id}
+                      whileHover={{ y: -5 }}
+                      className="min-w-[320px] max-w-[320px] snap-center bg-white border border-slate-100 rounded-3xl p-6 shadow-lg shadow-slate-200/40 group hover:border-primary/20 transition-all shrink-0"
+                    >
+                      <div className="flex items-start justify-between mb-6">
+                        <div className="w-16 h-16 rounded-2xl overflow-hidden shadow-md">
+                          <img src={doc.image} alt={doc.name} className="w-full h-full object-cover" />
+                        </div>
+                        <div className="flex items-center gap-1 bg-orange-50 text-orange-600 px-2 py-1 rounded-lg text-xs font-bold">
+                          <Star size={12} className="fill-orange-500" />
+                          {doc.rating}
+                        </div>
+                      </div>
+                      <h3 className="font-bold text-xl text-[#0a1628] mb-1 truncate">{doc.name}</h3>
+                      <p className="text-primary font-medium text-sm mb-4 truncate">{doc.specialty}</p>
+                      
+                      <div className="space-y-2 mb-6">
+                        <div className="flex items-center gap-2 text-slate-500 text-sm">
+                          <UserCircle2 size={16} /> {doc.experienceYears} Years Exp.
+                        </div>
+                        <div className="flex items-center gap-2 text-slate-500 text-sm truncate">
+                          <MapPin size={16} /> {doc.location}
+                        </div>
+                      </div>
+
+                      <Link href={`/doctors/${doc.id}`} className="w-full bg-slate-50 hover:bg-primary hover:text-white text-primary font-bold text-sm py-3 rounded-xl flex items-center justify-center transition-colors">
+                        {t("Book Appointment", "অ্যাপয়েন্টমেন্ট বুক করুন")}
+                      </Link>
+                    </motion.div>
+                  ))}
+                </div>
               </motion.div>
             ) : (
               <motion.div 
