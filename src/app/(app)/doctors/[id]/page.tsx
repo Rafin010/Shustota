@@ -3,14 +3,26 @@
 import { use, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { ArrowLeft, Star, MapPin, Award, CheckCircle2, Languages, Clock, Hospital, GraduationCap, FileText, CalendarDays } from "lucide-react";
+import { ArrowLeft, Star, MapPin, Award, CheckCircle2, Languages, Clock, Hospital, GraduationCap, FileText, CalendarDays, AlertCircle } from "lucide-react";
 import { mockDoctors, DoctorProfile } from "@/lib/mockData";
 import { BookingModal } from "@/components/doctors/BookingModal";
+import { GoogleMap } from "@/components/shared/GoogleMap";
 
 export default function DoctorProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
   const resolvedParams = use(params);
   const [doctor, setDoctor] = useState<DoctorProfile | null>(null);
+  const [activeMapIndex, setActiveMapIndex] = useState<number | null>(null);
+  const isGuest = true; // Guest mode indication
+
+  const handleBookingClick = () => {
+    if (isGuest) {
+      alert("আপনাকে প্রথমে সাইন-আপ করতে হবে। (You need to sign up first)");
+      router.push("/register");
+    } else {
+      router.push(`/doctors/${doctor?.id}/book`);
+    }
+  };
 
   useEffect(() => {
     const doc = mockDoctors.find(d => d.id === resolvedParams.id);
@@ -35,6 +47,21 @@ export default function DoctorProfilePage({ params }: { params: Promise<{ id: st
           </button>
         </div>
       </div>
+
+      {/* Guest Banner Indication */}
+      {isGuest && (
+        <div className="bg-orange-50 border-b border-orange-200 py-3 px-6 sticky top-16 z-30 shadow-sm">
+          <div className="max-w-[1280px] mx-auto flex flex-col sm:flex-row sm:items-center gap-3 text-orange-800">
+            <AlertCircle size={20} className="shrink-0 text-orange-600 hidden sm:block" />
+            <p className="text-[14px] font-medium leading-relaxed">
+              আপনি এখন Guest হিসেবে দেখছেন। অ্যাপয়েন্টমেন্ট বুক করতে বা আরও তথ্য দেখতে দয়া করে সাইন-আপ করুন।
+            </p>
+            <button onClick={() => router.push("/register")} className="sm:ml-auto whitespace-nowrap bg-orange-600 text-white px-5 py-2 rounded-full text-[13px] font-bold hover:bg-orange-700 transition-colors shadow-sm">
+              সাইন-আপ করুন (Sign Up)
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* PROFILE HEADER */}
       <div className="bg-white border-b border-slate-200">
@@ -77,7 +104,7 @@ export default function DoctorProfilePage({ params }: { params: Promise<{ id: st
             {/* Top Right Book Now Button */}
             <div className="md:absolute md:top-10 md:right-6">
               <button 
-                onClick={() => router.push(`/doctors/${doctor.id}/book`)}
+                onClick={handleBookingClick}
                 className="w-full md:w-auto px-6 h-12 bg-primary hover:bg-[#0052cc] text-white rounded-md font-medium text-[15px] flex items-center justify-center gap-2 transition-colors"
               >
                 <Clock size={18} />
@@ -115,20 +142,47 @@ export default function DoctorProfilePage({ params }: { params: Promise<{ id: st
               <div className="bg-white p-6 rounded-xl border border-slate-200 flex flex-col gap-6">
                 {doctor.chambers.map((chamber, idx) => (
                   <div key={idx} className="flex flex-col gap-2 pb-6 border-b border-slate-100 last:border-0 last:pb-0">
-                    <h3 className="text-[16px] font-bold text-slate-900">{chamber.name}</h3>
-                    <p className="text-[14px] text-slate-500 flex items-center gap-1.5">
-                      <MapPin size={16} /> {chamber.address}
-                    </p>
-                    <div className="flex flex-wrap items-center gap-3 mt-1.5">
-                      <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-md">
-                        <Clock size={14} className="text-slate-500" />
-                        <span className="text-[13px] font-medium text-slate-700">{chamber.time}</span>
+                    
+                    <div 
+                      className="cursor-pointer group flex flex-col gap-2 p-2 -mx-2 rounded-lg hover:bg-slate-50 transition-colors"
+                      onClick={() => setActiveMapIndex(activeMapIndex === idx ? null : idx)}
+                    >
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-[16px] font-bold text-slate-900 group-hover:text-primary transition-colors">{chamber.name}</h3>
+                        <span className="text-[12px] font-bold text-primary bg-primary/10 px-3 py-1 rounded-full whitespace-nowrap">
+                          {activeMapIndex === idx ? "Hide Map" : "View Map"}
+                        </span>
                       </div>
-                      <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-md">
-                        <CalendarDays size={14} className="text-slate-500" />
-                        <span className="text-[13px] font-medium text-slate-700">{chamber.days}</span>
+                      
+                      <p className="text-[14px] text-slate-500 flex items-center gap-1.5">
+                        <MapPin size={16} /> {chamber.address}
+                      </p>
+                      
+                      <div className="flex flex-wrap items-center gap-3 mt-1.5">
+                        <div className="flex items-center gap-1.5 bg-white border border-slate-200 px-3 py-1.5 rounded-md group-hover:border-primary/30 transition-colors">
+                          <Clock size={14} className="text-slate-500" />
+                          <span className="text-[13px] font-medium text-slate-700">{chamber.time}</span>
+                        </div>
+                        <div className="flex items-center gap-1.5 bg-white border border-slate-200 px-3 py-1.5 rounded-md group-hover:border-primary/30 transition-colors">
+                          <CalendarDays size={14} className="text-slate-500" />
+                          <span className="text-[13px] font-medium text-slate-700">{chamber.days}</span>
+                        </div>
                       </div>
                     </div>
+
+                    {/* Conditional Map Render for this specific chamber */}
+                    {activeMapIndex === idx && (
+                      <div className="mt-4 pt-4 border-t border-slate-100 animate-in fade-in zoom-in-95 duration-200">
+                        <div className="h-[300px] w-full rounded-xl overflow-hidden shadow-inner border border-slate-200">
+                          <GoogleMap 
+                            lat={doctor.mapLocation?.lat || 23.8052} 
+                            lng={doctor.mapLocation?.lng || 90.3639} 
+                            title={`${chamber.name} Location`}
+                          />
+                        </div>
+                      </div>
+                    )}
+
                   </div>
                 ))}
               </div>
