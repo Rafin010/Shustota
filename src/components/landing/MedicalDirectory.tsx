@@ -212,7 +212,7 @@ export function MedicalDirectory() {
                         </div>
                       </div>
 
-                      <Link href={`/doctors/${doc.id}`} className="w-full bg-slate-50 border border-slate-200 hover:border-primary hover:bg-primary hover:text-white text-primary font-bold text-sm py-3 rounded-xl flex items-center justify-center transition-colors">
+                      <Link href={`/doctors/${doc.id}`} className="w-full bg-slate-50 border border-slate-200 hover:border-primary hover:bg-primary hover:text-white active:bg-primary active:text-white text-primary font-bold text-sm py-3 rounded-xl flex items-center justify-center transition-colors">
                         {t("Book Appointment", "অ্যাপয়েন্টমেন্ট বুক করুন")}
                       </Link>
                     </motion.div>
