@@ -4,7 +4,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Search, Home, Activity, Stethoscope } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { SiteHeader } from '@/components/landing/SiteHeader';
+import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 
 export default function NotFound() {
@@ -12,9 +12,9 @@ export default function NotFound() {
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
-      <SiteHeader />
+      <Navbar />
 
-      <main className="flex-1 flex flex-col items-center justify-center relative overflow-hidden px-4">
+      <main className="flex-1 flex flex-col items-center justify-center relative overflow-hidden px-4 py-32 min-h-[calc(100vh-200px)]">
         
         {/* Animated Background Elements */}
         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
