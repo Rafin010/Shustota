@@ -39,7 +39,7 @@ export default function NotFound() {
         <div className="max-w-[800px] w-full z-10 flex flex-col items-center text-center">
           
           {/* Main 404 Visual */}
-          <div className="relative mb-[40px] flex items-center justify-center w-full mt-[20px]">
+          <div className="relative mb-[40px] flex items-center justify-center w-full -mt-[40px]">
             <motion.div 
               initial={{ y: 30, opacity: 0, scale: 0.95 }}
               animate={{ y: 0, opacity: 1, scale: 1 }}
@@ -60,10 +60,10 @@ export default function NotFound() {
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.5, duration: 0.5 }}
           >
-            <h2 className="text-[32px] md:text-[42px] font-extrabold text-slate-800 mb-[16px] tracking-tight">
+            <h2 className="text-[32px] md:text-[42px] font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-slate-800 via-slate-900 to-slate-600 mb-[16px] tracking-tight">
               Page Not Found
             </h2>
-            <p className="text-[16px] md:text-[18px] text-slate-500 max-w-[500px] mx-auto leading-relaxed mb-[40px]">
+            <p className="text-[16px] md:text-[18px] text-orange-400 font-medium max-w-[500px] mx-auto leading-relaxed mb-[40px]">
               We couldn't find the page you are looking for. It might have been moved, deleted, or perhaps the URL is misspelled.
             </p>
           </motion.div>
